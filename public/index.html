@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <title>Pizza Pros</title>
+  <script src="app.js" type="module"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+</head>
+
+<body>
+
+  <body>
+    <div class="columns m-0 p-0">
+      <div class="column is-hidden-mobile has-background-grey-darker"></div>
+      <div class="column is-7 p-0">
+        <nav class="navbar has-background-grey-darker">
+          <div class="navbar-brand">
+            <a href="#" class="navbar-item">
+              <!-- <img src="images/mb-words.svg" alt="" height="150" width="150" /> -->
+              <div class="has-text-centered has-text-white">Pizza Pros</div>
+            </a>
+            <a href="#" class="navbar-burger pr-0">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
+          <div class="navbar-menu pt-0 has-text-centered">
+            <div class="navbar-start has-text-white has-background-grey-darker">
+              <a href="#" class="navbar-item has-text-white" id="home">
+                Home
+              </a>
+            </div>
+            <div class="navbar-end has-background-grey-darker">
+              <a href="#" class="navbar-item has-text-white" id='acct-btn'>Admin</a>
+            </div>
+        </nav>
+      </div>
+      <div class="column is-hidden-mobile has-background-grey-darker"></div>
+    </div>
+
+    <!--  MAIN CONTENT -->
+    <main class="container" id="main-content">
+      <div class="columns">
+        <div class="column"></div>
+        <div class="column is-three-quarters">
+          <div class="section p-6" id="home-page">
+            <!-- selector for the whole page content -->
+            <div class="notification has-background-white-ter mb-2" id="welcome">
+              <button class="delete" id="welcome-delete"></button>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet tempore dolor incidunt placeat inventore,
+              aut debitis fuga earum ullam voluptatum ut odit consequatur id quia deserunt rem asperiores? Impedit,
+              sapiente.
+            </div>
+            <div class="message has-background-grey-darker is-hidden" id="order-summary">
+              <div class="message-header has-text-white">
+                Order Summary
+                <div class="button is-success">Check Out</div>
+              </div>
+              <div class="message-body has-background-white-ter">
+                <div class="columns">
+                  <div class="column has-text-centered pt-6">
+                    <div class="title is-2 has-text-weight-bold has-text-grey-dark" id="org-title">
+                      Test Org
+                    </div>
+                    <p class="subtitle is-" id="org-subtitle">Pickup 10/29/23, noon-2:00</p>
+                  </div>
+                  <div class="column is-narrow has-text-centered">
+                    <figure class="image pt-1 is-64x64 is-inline-block">
+                      <img src="images/pizza.svg" alt="" height="50" width="50" />
+                      <div class="title is-1 has-text-weight-bold has-text-grey-dark" id="total-quantity">
+                        3x
+                      </div>
+                    </figure>
+                  </div>
+                  <div class="column has-text-centered pt-6">
+                    <div class="title is-1 has-text-weight-bold has-text-success" id="total-price">
+                      $50
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="box has-background-white is-hidden" id="order-box">
+              <table class="table is-fullwidth" id="order-table">
+                <thead>
+                  <th>
+                    Pizza Type
+                  </th>
+                  <th>
+                    Price
+                  </th>
+                  <th>
+                    Quantity
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                  <th>
+                  </th>
+                </thead>
+                <tbody id="order-table-body">
+
+                </tbody>
+                <tfoot>
+                  <tr class="has-background-white-ter">
+                    <td class="pl-3">
+                      <button class="button is-size-7">
+                        <div class="text has-text-weight-bold pl-1 pr-1 is-size-6 has-text-success"
+                          id="add-item-button">Add</div>
+                      </button>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="column"></div>
+      </div>
+      </div>
+    </main>
+
+    <!-- MODALS -->
+    <div class="modal" id="acct-modal">
+      <div class="modal-background" id="acct-modal-bg"></div>
+      <div class="modal-content">
+        <div class="box has-text-centered m-auto" id="acct-modal-box">
+          <div class="tabs is-centered has-text-weight-bold">
+            <ul>
+              <li class="" id="modal-signin-tab"><a>Sign In</a></li>
+              <li id="modal-signup-tab"><a>Sign Up</a></li>
+            </ul>
+          </div>
+          <div class="notification is-danger is-light is-hidden" id="account-error">
+          </div>
+          <div class="notification is-warning has-text-left is-light is-hidden" id="already-signed-in">
+            Warning: You are already signed in to an existing account. Click <a class="has-text-link" href="#"
+              id="signout-link">here</a> to sign out.
+          </div>
+          <div id="acct-modal-content">
+            <p class="has-text-left">Email</p>
+            <input class="input" placeholder="example@mail.com" id="username" type="email"></input>
+            <p class="has-text-left">Password</p>
+            <input type='password' class="input" id="password"></input>
+            <div class="is-hidden" id="acct-modal-signup-content">
+              <p class="has-text-left">Confirm Password</p>
+              <input type='password' class="input" id="confirm-password"></input>
+              <div class="block"></div>
+              <div class="button is-danger has-text-weight-bold" id="account-modal-signup">Sign Up</div>
+            </div>
+            <div class="block"></div>
+            <div class="button is-success has-text-weight-bold" id="account-modal-signin">Sign In</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="check-modal">
+      <div class="modal-background" id="check-modal-bg"></div>
+      <div class="modal-content">
+        <div class="columns p-0 m-0">
+          <div class="column"></div>
+          <div class="column is-two-thirds">
+            <div class="box has-text-centered m-7 p-5" id="check-modal-box">
+              <h1 class="title is-size-3 has-text-centered has-text-grey-darker has-text-weight-bold"
+                id="check-modal-title">
+                Check Out
+              </h1>
+              <div class="columns">
+                <div class="column">
+                  <div class="title has-text-weight-bold is-4">Quantity:</div>
+                  <div class="title is-4">10</div>
+                </div>
+                <div class="column">
+                  <div class="title has-text-weight-bold is-4">Price:</div>
+                  <div class="title is-4 has-text-success">$50</div>
+                </div>
+              </div>
+              <button class="button is-danger defualt-btn">
+                <div class="text has-text-weight-bold is-size-5" id="check-cancel-button ">Cancel</div>
+              </button>
+              <button class="button is-success defualt-btn">
+                <div class="text has-text-weight-bold is-size-5" id="check-confirm-button">Confirm</div>
+              </button>
+            </div>
+          </div>
+          <div class="column"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="add-modal">
+      <div class="modal-background" id="add-modal-bg"></div>
+      <div class="modal-content">
+        <div class="box has-text-centered m-auto p-5" id="add-modal-box">
+          <h1 class="title is-size-3 has-text-centered has-text-grey-darker has-text-weight-bold" id=" add-modal-title">
+            Add Pizza
+          </h1>
+          <div class="columns">
+            <div class="column">
+              <div class="box has-background-grey-lighter" id='add-modal-choices-box'>
+              </div>
+            </div>
+            <div class="column is-two-thirds">
+              <article class="message">
+                <div class="message-header has-background-grey">
+                  <p id="add-modal-title">Cheese Pizza</p>
+                </div>
+                <div class="message-body has-background-grey-lighter">
+                  <div class="columns">
+                    <div class="column">
+                      <div class="title is-5 has-text-grey-dark">Unit Price:</div>
+                      <div class="subtitle is-3 has-text-success has-text-weight-bold" id="add-modal-price">N/A</div>
+                    </div>
+                    <div class="column">
+                      <div class="title is-5 has-text-grey-dark mb-1">Quantity:</div>
+                      <div class="container pt-0 pb-0 pl-6 pr-6">
+                        <input class="input has-text-centered" type="number" min="1" placeholder="1" value="1">
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+          <button class="button is-success">
+            <div class="text has-text-weight-bold is-size-4" id="add-item-button ">Add</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer has-background-white is-fixed-bottom">
+      <div class="content has-text-centered is-bordered">
+        <p>
+
+        </p>
+      </div>
+    </footer>
+
+
+
+
+
+  </body>
+
+</html>
