@@ -6,15 +6,15 @@ class Order {
     this.itemMap = new Map();
   }
 
-  static fromPayload(data) {
+  static fromOrder(data) {
     const order = new Order();
-    order.fundraiser = data.fundraiser;
+    order.fundraiserId = data.FundraiserId;
     order.userId = data.UID;
     order.status = data.Status;
     if (data.Products) {
       for (const [itemName, quantity] of Object.entries(data.Products)) {
         order.itemMap[itemName] = quantity;
-      }
+      } 
     }
     return order;
   }
@@ -25,7 +25,7 @@ class Order {
     if (newCount <= 0) {
       this.removeItem(itemName);
     } else {
-      this.itemMap = newCount;
+      this.itemMap[itemName] = newCount;
     }
   }
 

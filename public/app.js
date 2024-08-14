@@ -27,12 +27,28 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
 
-const ORDERS = collection(db, "Orders");
-const FUNDRAISERS = collection(db, "Fundraisers");
-const PRODUCTS = collection(db, "Products");
-const USERS = collection(db, "Users");
+const collections = {
+  orders: collection(db, "Orders"),
+  fundraisers: collection(db, "Fundraisers"),
+  products: collection(db, "Products"),
+  users: collection(db, "Users"),
+};
 
-//// Functions
+// Basic assignments
+let order = null;
+const queryMap = utils.mapQueryString();
+
+// Map product info
+let product_info = new Map();
+let q = query(collections.products);
+await getDocs(q).then((snap) => {
+  snap.docs.forEach((doc) => {
+    let data = doc.data();
+    product_info[data.Type] = { price: data.Price };
+  });
+});
+
+//// Functions ////
 
 // Genral
 const r = utils.r;
@@ -57,120 +73,243 @@ async function openModal(name) {
   });
 }
 
-// UI
-async function loadFundraiser(order) {
-  // Make components visible
-  r("order-summary").classList.remove("is-hidden");
-  r("order-box").classList.remove("is-hidden");
+async function closeModal(name) {
+  let element = r(name);
+  element.classList.remove("is-active");
+}
 
-  // Get fundraiser doc from order or query it
-  let fundData = null;
-  if (order.fundraiser) {
-    fundData = (await getDoc(order.fundraiser)).data();
-  } else {
-    let q = query(FUNDRAISERS, where("Name", "==", "Example School"));
-    fundData = await getDocs(q).then((snap) => {
-      if (!snap.docs[0]) {
-        console.log("No fundraiser of name " + fundData.Name);
-        return;
-      }
-      return snap.docs[0].data();
-    });
-  }
+// UI
+async function loadFundraiser() {
+  r("search-page").classList.add("is-hidden");
+  r("order-page").classList.remove("is-hidden");
 
   // Populate summary
   const orgTitle = r("org-title");
   const orgPkpInfo = r("org-subtitle");
-  orgTitle.innerHTML = fundData.Name;
-  const options = {
-    month: "2-digit",
-    day: "2-digit",
-    year: "2-digit",
-    hour12: true,
-  };
-  const startStamp = fundData.Pickup_Start.toDate();
-  const endStamp = fundData.Pickup_End.toDate();
-  const startTime = startStamp.toLocaleString("en-US", {
-    hour: "numeric",
-    hour12: true,
+  orgTitle.innerHTML = order.fundraiserData.Name;
+  orgPkpInfo.innerHTML = order.fundraiserData.Pickup;
+  r("checkout-btn").addEventListener("click", () => {
+    loadCheckout();
   });
-  const endTime = endStamp.toLocaleString("en-US", {
-    hour: "numeric",
-    hour12: true,
-  });
-  const date = startStamp.toLocaleString("en-US", options);
-  orgPkpInfo.innerHTML = "Pickup ".concat(
-    date,
-    ", ",
-    startTime,
-    " - ",
-    endTime
-  );
 
   // Populate add modal data
   const addModalScroller = r("add-modal-choices-box");
   const addModalPrice = r("add-modal-price");
-  let q = query(PRODUCTS);
+  const addModalTitle = r("add-modal-title");
   let buttons = [];
-  fundData = await getDocs(q).then((snap) => {
+
+  function selectItem(selectedBtn, data) {
+    buttons.forEach((otherBtn) => {
+      otherBtn.classList.remove("is-info", "has-text-weight-bold");
+    });
+    addModalPrice.innerHTML = "$" + data.price;
+    addModalTitle.innerHTML = selectedBtn.innerHTML + " Pizza";
+    selectedBtn.classList.add("is-info", "has-text-weight-bold");
+  }
+
+  let index = 0;
+  for (let productType in product_info) {
+    let info = product_info[productType];
+    let btn = comps.choicesRow(addModalScroller, productType);
+    buttons.push(btn);
+
+    if (index == 0) {
+      selectItem(btn, info);
+    }
+    index++;
+
+    btn.addEventListener("click", () => {
+      selectItem(btn, info);
+    });
+  }
+
+  // Popup button
+  r("add-item-button").addEventListener("click", () => {
+    openModal("add-modal");
+  });
+
+  // Modal button
+  r("add-item-modal-button").addEventListener("click", () => {
+    const selectedItemName = addModalTitle.innerHTML.split(" ")[0];
+    const quantity = Number(r("add-modal-quantity-input").value);
+    order.incrementItem(selectedItemName, quantity);
+    closeModal("add-modal");
+    updateOrderTable();
+  });
+
+  updateOrderTable();
+}
+
+async function loadCheckout() {
+  openModal("checkout-modal");
+  r("checkout-total-price").innerHTML = r("total-price").innerHTML;
+  r("checkout-total-quantity").innerHTML = r("total-quantity").innerHTML;
+
+  const firstNameInput = r("checkout-first-name");
+  const lastNameInput = r("checkout-last-name");
+  const emailInput = r("checkout-email");
+
+  const inputs = [firstNameInput, lastNameInput, emailInput];
+  inputs.forEach((input) => {
+    input.classList.remove("is-danger");
+  });
+
+  r("checkout-modal-confirm").addEventListener("click", () => {
+    inputs.forEach((input) => {
+      let isMissingInput = false;
+      if (input.value == "") {
+        input.classList.add("is-danger");
+        isMissingInput = true;
+      }
+      if (isMissingInput) {
+        return;
+      }
+    });
+  });
+}
+
+async function loadFundraisersSearch() {
+  r("search-page").classList.remove("is-hidden");
+  r("order-page").classList.add("is-hidden");
+
+  // Populate table
+  const fundraisersTable = r("fundraisers-table-body");
+  const q = query(collections.fundraisers);
+  await getDocs(q).then((snap) => {
     snap.docs.forEach((doc) => {
       let data = doc.data();
-      let btn = comps.choicesRow(data.Type, addModalScroller);
-      PRODUCT_INFO[data.Type] = { Price: data.Price };
-      buttons.push(btn);
-      btn.addEventListener("click", () => {
-        buttons.forEach((choiceBtn) => {
-          choiceBtn.classList.remove("is-info", "has-text-weight-bold");
-        });
-        addModalPrice.innerHTML = "$" + data.Price;
-        btn.classList.add("is-info", "has-text-weight-bold");
+      let [viewBtn, editBtn] = comps.fundraiserRow(
+        fundraisersTable,
+        data.Name,
+        data.Due,
+        data.Pickup,
+        true
+      );
+
+      viewBtn.addEventListener("click", () => {
+        window.location.search = `fundraiserid=${doc.id}`;
+      });
+      editBtn.addEventListener("click", () => {
+        loadFundraiserEdit(doc.id, data);
       });
     });
   });
+}
 
-  const addBtn = r("add-item-button");
+async function loadFundraiserEdit(fundraiserId, fundraiserData) {
+  openModal("fundraiser-edit-modal");
+  if (fundraiserId) {
+    // Get existing order data
+    let totalRevenue = 0;
+    let totalQuantity = 0;
+    let qtyMap = new Map();
+    const q = query(
+      collections.orders,
+      where("FundraiserId", "==", fundraiserId)
+    );
+    await getDocs(q).then((snap) => {
+      snap.docs.forEach((doc) => {
+        let data = doc.data();
+        for (let productType in data.Products) {
+          const qty = data.Products[productType];
+          const price = product_info[productType].price;
+          totalRevenue += price * qty;
+          totalQuantity += qty;
 
-  addBtn.addEventListener("click", () => {
-    openModal("add-modal");
-  });
-  updateOrderTable();
+          if (qtyMap[productType]) {
+            qtyMap[productType] += qty;
+          } else {
+            qtyMap[productType] = qty;
+          }
+        }
+      });
+
+      // Setup quantity map export
+      let csv = "Product,Quantity\n";
+      for (let product in qtyMap) {
+        qty = qtyMap[product];
+        csv += `${product},${qty}\n`;
+      }
+
+      r("fundraiser-export-btn").addEventListener("click", () => {
+        utils.download(
+          `${fundraiserData.Name} Export ${Date.now().toString()}.csv`,
+          csv
+        );
+      });
+
+      r("fundraiser-edit-total-quantity").innerHTML = totalQuantity + "x";
+      r("fundraiser-edit-total-price").innerHTML = "$" + totalRevenue;
+    });
+  } else {
+  }
 }
 
 function updateOrderTable() {
   const orderTable = r("order-table-body");
+  const priceText = r("total-price");
+  const quantityText = r("total-quantity");
+
+  let totalPrice = 0;
+  let totalQuantity = 0;
   orderTable.innerHTML = "";
-  console.log(order.itemMap);
   for (const [itemName, quantity] of Object.entries(order.itemMap)) {
-    console.log(PRODUCT_INFO);
-    const exitBtn = comps.orderRow(
-      itemName,
-      PRODUCT_INFO[itemName].Price,
-      quantity,
-      orderTable
-    );
+    const price = product_info[itemName].price;
+    const exitBtn = comps.orderRow(orderTable, itemName, price, quantity);
+
+    totalPrice += quantity * price;
+    totalQuantity += quantity;
+
     exitBtn.addEventListener("click", () => {
       order.removeItem(itemName);
       updateOrderTable();
     });
   }
+
+  if (totalPrice <= 0) {
+    r("checkout-btn").classList.add("is-hidden");
+  } else {
+    r("checkout-btn").classList.remove("is-hidden");
+  }
+
+  priceText.innerHTML = "$" + totalPrice;
+  quantityText.innerHTML = totalQuantity + "x";
 }
 
-//// Execution
-
-let PRODUCT_INFO = new Map();
-
-// Map query string
-const queryMap = utils.mapQueryString();
-let order = new Order();
-if (!queryMap.fundraisername & !queryMap.orderid) {
-  // TODO: send to fundraiser screen?
-} else {
-  // Populate the order object with existing order data if applicable
+async function resolveOrder() {
   if (queryMap.orderid) {
-    const data = await getSnapFromId(ORDERS, queryMap.orderid);
-    if (data) {
-      order = Order.fromPayload(data);
+    // Populate the order object with existing order data if applicable
+    const data = await getSnapFromId(collections.orders, queryMap.orderid);
+    if (!data) {
+      return;
     }
+    order = Order.fromOrder(data);
+  } else if (queryMap.fundraiserid) {
+    // Populate from fundraiser id
+    order = new Order();
+    order.fundraiserId = queryMap.fundraiserid;
   }
-  loadFundraiser(order); // load the fundraiser
+}
+
+//// Execution ////
+
+r("navbar-find").addEventListener("click", () => {
+  window.location.search = "";
+});
+
+await resolveOrder();
+
+// Check for fundraiser data
+if (order && order.fundraiserId) {
+  order.fundraiserData = await getSnapFromId(
+    collections.fundraisers,
+    order.fundraiserId
+  );
+}
+
+// Load appropriate page
+if (order && order.fundraiserData) {
+  loadFundraiser();
+} else {
+  loadFundraisersSearch();
 }

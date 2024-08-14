@@ -18,12 +18,12 @@
   <body>
     <div class="columns m-0 p-0">
       <div class="column is-hidden-mobile has-background-grey-darker"></div>
-      <div class="column is-7 p-0">
+      <div class="column is-6 p-0">
         <nav class="navbar has-background-grey-darker">
           <div class="navbar-brand">
             <a href="#" class="navbar-item">
               <!-- <img src="images/mb-words.svg" alt="" height="150" width="150" /> -->
-              <div class="has-text-centered has-text-white">Pizza Pros</div>
+              <div class="has-text-centered has-text-weight-bold has-text-white">Pizza Pros</div>
             </a>
             <a href="#" class="navbar-burger pr-0">
               <span aria-hidden="true"></span>
@@ -33,8 +33,8 @@
           </div>
           <div class="navbar-menu pt-0 has-text-centered">
             <div class="navbar-start has-text-white has-background-grey-darker">
-              <a href="#" class="navbar-item has-text-white" id="home">
-                Home
+              <a class="navbar-item has-text-white" id="navbar-find">
+                Find Fundraiser
               </a>
             </div>
             <div class="navbar-end has-background-grey-darker">
@@ -50,44 +50,48 @@
       <div class="columns">
         <div class="column"></div>
         <div class="column is-three-quarters">
-          <div class="section p-6" id="home-page">
+          <div class="section p-6 is-hidden" id="order-page">
             <!-- selector for the whole page content -->
-            <div class="notification has-background-white-ter mb-2" id="welcome">
+            <div class="notification has-background-white-ter mb-2" id="main-banner">
               <button class="delete" id="welcome-delete"></button>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet tempore dolor incidunt placeat inventore,
               aut debitis fuga earum ullam voluptatum ut odit consequatur id quia deserunt rem asperiores? Impedit,
               sapiente.
             </div>
-            <div class="message has-background-grey-darker is-hidden" id="order-summary">
+            <div class="message has-background-grey-darker" id="order-summary">
               <div class="message-header has-text-white">
                 Order Summary
-                <div class="button is-success">Check Out</div>
+                <div class="button is-success" id="checkout-btn">Check Out</div>
               </div>
               <div class="message-body has-background-white-ter">
                 <div class="columns">
-                  <div class="column has-text-centered pt-6">
+                  <div class="column has-text-centered pt-5">
                     <div class="title is-2 has-text-weight-bold has-text-grey-dark" id="org-title">
                       Test Org
                     </div>
-                    <p class="subtitle is-" id="org-subtitle">Pickup 10/29/23, noon-2:00</p>
+                    <p class="subtitle" id="org-subtitle">Pickup 10/29/23, noon-2:00</p>
                   </div>
-                  <div class="column is-narrow has-text-centered">
+                  <div class="column has-text-centered">
                     <figure class="image pt-1 is-64x64 is-inline-block">
                       <img src="images/pizza.svg" alt="" height="50" width="50" />
-                      <div class="title is-1 has-text-weight-bold has-text-grey-dark" id="total-quantity">
-                        3x
-                      </div>
+
                     </figure>
+                    <div class="title is-2 has-text-weight-bold has-text-grey-dark" id="total-quantity">
+                      0x
+                    </div>
                   </div>
-                  <div class="column has-text-centered pt-6">
+                  <div class="column has-text-centered pt-5">
+                    <div class="title is-3 has-text-weight-bold mb-1">
+                      Total:
+                   </div>
                     <div class="title is-1 has-text-weight-bold has-text-success" id="total-price">
-                      $50
+                       $0
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="box has-background-white is-hidden" id="order-box">
+            <div class="box has-background-white" id="order-box">
               <table class="table is-fullwidth" id="order-table">
                 <thead>
                   <th>
@@ -117,6 +121,48 @@
                       </button>
                     </td>
                     <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          <div class="section p-6 is-hidden" id="search-page">
+            <!-- selector for the whole page content -->
+            <div class="notification has-background-white-ter mb-2" id="main-banner">
+              <button class="delete" id="welcome-delete"></button>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet tempore dolor incidunt placeat inventore,
+              aut debitis fuga earum ullam voluptatum ut odit consequatur id quia deserunt rem asperiores? Impedit,
+              sapiente.
+            </div>
+            <div class="box has-background-white" id="fundraisers-box">
+              <table class="table is-fullwidth" id="fundraisers-table">
+                <thead>
+                  <th>
+                    Fundraiser 
+                  </th>
+                  <th>
+                    Due Date
+                  </th>
+                  <th>
+                    Pickup Date
+                  </th>
+                  <th>
+                  </th>
+                </thead>
+                <tbody id="fundraisers-table-body">
+
+                </tbody>
+                <tfoot>
+                  <tr class="has-background-white-ter">
+                    <td class="pl-3">
+                      <button class="button is-size-7">
+                        <div class="text has-text-weight-bold pl-1 pr-1 is-size-6 has-text-success"
+                          id="add-fundraiser-button">Add</div>
+                      </button>
+                    </td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -166,6 +212,141 @@
       </div>
     </div>
 
+    <!-- MODALS -->
+    <div class="modal" id="checkout-modal">
+      <div class="modal-background" id="checkout-modal-bg"></div>
+      <div class="modal-content">
+        <div class="box has-text-centered m-auto" id="checkout-modal-box">
+
+          <div class="message has-background-grey-darker" id="checkout-order-summary">
+            <div class="message-header has-text-white">
+              Order Summary
+            </div>
+            <div class="message-body has-background-white-ter">
+              <div class="columns">
+
+                <div class="column has-text-centered">
+                  <figure class="image pt-1 is-64x64 is-inline-block">
+                    <img src="images/pizza.svg" alt="" height="50" width="50" />
+
+                  </figure>
+                  <div class="title is-2 has-text-weight-bold has-text-grey-dark" id="checkout-total-quantity">
+                    0x
+                  </div>
+                </div>
+                <div class="column has-text-centered pt-5">
+                  <div class="title is-3 has-text-weight-bold mb-1">
+                    Total:
+                 </div>
+                  <div class="title is-1 has-text-weight-bold has-text-success" id="checkout-total-price">
+                     $0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="notification is-warning has-text-left is-light is-hidden" id="checkout-error">
+            Warning: Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deleniti, officia.
+          </div>
+          <div id="checkout-modal-content">
+            <div class="columns">
+              <div class="column">
+                <p class="has-text-left">First Name</p>
+                <input class="input" placeholder="John" id="checkout-first-name" type="text"></input>
+              </div>
+              <div class="column">
+                <p class="has-text-left">Last Name</p>
+                <input class="input" placeholder="Doe" id="checkout-last-name" type="text"></input>
+              </div>
+            </div>
+
+            <p class="has-text-left">Email</p>
+            <input class="input" placeholder="example@mail.com" id="checkout-email" type="email"></input>
+
+            <div class="block"></div>
+            <div class="button is-success has-text-weight-bold" id="checkout-modal-confirm">Confirm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="fundraiser-edit-modal">
+      <div class="modal-background" id="fundraiser-edit-modal-bg"></div>
+      <div class="modal-content">
+        <div class="box has-text-centered m-auto" id="fundraiser-edit-modal-box">
+
+          <div class="message has-background-grey-darker" id="fundraiser-edit-order-summary">
+            <div class="message-header is-size-6 has-text-white">
+              New Fundraiser 
+              <div class="button is-size-6 is-info" id="fundraiser-export-btn">Export Data</div>
+            </div>
+            <div class="message-body has-background-white-ter">
+              <div class="columns">
+
+                <div class="column has-text-centered">
+                  <figure class="image pt-1 is-64x64 is-inline-block">
+                    <img src="images/pizza.svg" alt="" height="50" width="50" />
+
+                  </figure>
+                  <div class="title is-2 has-text-weight-bold has-text-grey-dark" id="fundraiser-edit-total-quantity">
+                    0x
+                  </div>
+                </div>
+                <div class="column has-text-centered pt-5">
+                  <div class="title is-3 has-text-weight-bold mb-1">
+                    Total:
+                 </div>
+                  <div class="title is-1 has-text-weight-bold has-text-success" id="fundraiser-edit-total-price">
+                     $0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="notification is-warning has-text-left is-light is-hidden" id="fundraiser-edit-error">
+            Warning: Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deleniti, officia.
+          </div>
+          <div id="fundraiser-edit-content">
+
+            <div class="columns">
+              <div class="column">
+                <p class="has-text-left">Fundraiser Name</p>
+                <input class="input" placeholder="Zion Lutheran Wayside" id="fundraiser-edit-name" type="text"></input>
+              </div>
+              <div class="column">
+                <div class="dropdown is-pulled-left" id="fundraiser-edit-status-dropdown">
+                  <div class="dropdown-trigger">
+                    <p class="has-text-left">Status</p>
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="fundraiser-edit-status-btn">
+                      <span>Active</span>
+                      <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content has-text-left">
+                      <a class="dropdown-item"> Active </a>
+                      <a class="dropdown-item"> Complete </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="has-text-left">Due Message</p>
+            <input class="input mb-4" placeholder="January 13, 1 PM" id="fundraiser-edit-pickup" type="email"></input>
+            <p class="has-text-left">Pickup Message</p>
+            <input class="input" placeholder="January 14, 1 PM - 2 PM" id="fundraiser-edit-due" type="text"></input>
+            <div class="block"></div>
+            <div class="button is-success has-text-weight-bold" id="fundraiser-edit-done">Done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="check-modal">
       <div class="modal-background" id="check-modal-bg"></div>
       <div class="modal-content">
@@ -184,7 +365,7 @@
                 </div>
                 <div class="column">
                   <div class="title has-text-weight-bold is-4">Price:</div>
-                  <div class="title is-4 has-text-success">$50</div>
+                  <div class="title is-4 has-text-success">$0</div>
                 </div>
               </div>
               <button class="button is-danger defualt-btn">
@@ -204,7 +385,7 @@
       <div class="modal-background" id="add-modal-bg"></div>
       <div class="modal-content">
         <div class="box has-text-centered m-auto p-5" id="add-modal-box">
-          <h1 class="title is-size-3 has-text-centered has-text-grey-darker has-text-weight-bold" id=" add-modal-title">
+          <h1 class="title is-size-3 has-text-grey-darker has-text-weight-bold" id=" add-modal-title">
             Add Pizza
           </h1>
           <div class="columns">
@@ -220,13 +401,16 @@
                 <div class="message-body has-background-grey-lighter">
                   <div class="columns">
                     <div class="column">
-                      <div class="title is-5 has-text-grey-dark">Unit Price:</div>
-                      <div class="subtitle is-3 has-text-success has-text-weight-bold" id="add-modal-price">N/A</div>
+                      <div class="title is-5 has-text-grey-dark mb-3">Unit Price:</div>
+                      <div class="container pt-0 pb-0 pl-0 pr-0">
+                        <div class="subtitle is-4 has-text-success has-text-weight-bold" id="add-modal-price">N/A</div>
+                      </div>
+                      
                     </div>
                     <div class="column">
-                      <div class="title is-5 has-text-grey-dark mb-1">Quantity:</div>
+                      <div class="title is-5 has-text-grey-dark mb-2">Quantity:</div>
                       <div class="container pt-0 pb-0 pl-6 pr-6">
-                        <input class="input has-text-centered" type="number" min="1" placeholder="1" value="1">
+                        <input class="input has-text-centered" id="add-modal-quantity-input" type="number" min="1" placeholder="1" value="1">
                       </div>
 
                     </div>
@@ -236,7 +420,7 @@
             </div>
           </div>
           <button class="button is-success">
-            <div class="text has-text-weight-bold is-size-4" id="add-item-button ">Add</div>
+            <div class="text has-text-weight-bold is-size-4" id="add-item-modal-button">Add</div>
           </button>
         </div>
       </div>
